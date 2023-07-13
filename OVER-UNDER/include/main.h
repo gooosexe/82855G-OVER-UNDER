@@ -71,11 +71,9 @@ void opcontrol(void);
 }
 #endif
 
+// cpp-only headers
 #ifdef __cplusplus
-/**
- * You can add C++-only headers here
- */
-//#include <iostream>
+#include <iostream>
 #endif
 
 #endif  // _PROS_MAIN_H_
