@@ -38,10 +38,8 @@ void opcontrol() {
 		double xmotion = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
 		double rotation = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-		mtr_lf = ymotion + rotation;
-		mtr_lb = ymotion + rotation;
-		mtr_rf = ymotion - rotation;
-		mtr_rb = ymotion - rotation;
+		left_drive = ymotion + rotation;
+		right_drive = ymotion - rotation;
 
 		pros::lcd::set_text(1, std::to_string(ymotion));
 		pros::lcd::set_text(2, std::to_string(rotation));
