@@ -35,11 +35,10 @@ void autonomous() {}
 void opcontrol() {
 	while (true) {
 		double ymotion = master.get_analog(ANALOG_LEFT_Y);
-		double xmotion = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
-		double rotation = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+		double rotation = master.get_analog(ANALOG_RIGHT_X);
 
-		left_drive = ymotion + rotation;
-		right_drive = ymotion - rotation;
+		left_drive = (ymotion + rotation)*0.9;
+		right_drive = (ymotion - rotation)*0.9;
 
 		pros::lcd::set_text(1, std::to_string(ymotion));
 		pros::lcd::set_text(2, std::to_string(rotation));
