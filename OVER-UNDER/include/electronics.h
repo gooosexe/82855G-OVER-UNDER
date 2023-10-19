@@ -1,7 +1,7 @@
 #pragma once
 #include "main.h"
 
-extern pros::Motor mtr_lf, mtr_lb, mtr_lbh, mtr_rf, mtr_rb, mtr_rbh, mtr_arm;
+extern pros::Motor mtr_lf, mtr_lb, mtr_lbh, mtr_rf, mtr_rb, mtr_rbh, mtr_arm, mtr_cata;
 extern pros::ADIDigitalOut armLeft, armRight, armLeftIn, armRightIn;
 
 extern pros::Controller master;

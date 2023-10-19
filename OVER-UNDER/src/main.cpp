@@ -42,10 +42,12 @@ void opcontrol() {
 		double rotation = master.get_analog(ANALOG_RIGHT_X);
 
 		if (master.get_digital(DIGITAL_L1)) {
-			// flip arm state and activate arm
+			// flip arm state
 			armState = !armState;
 			(armState) ? armLeft.set_value(true) : armLeft.set_value(false);
 		}
+
+		if (master.get_digital(DIGITAL_A)) mtr_cata.move_absolute(mtr_cata.get_position() + 180, 1000); 
 
 		left_drive = (ymotion + rotation)*0.9;
 		right_drive = (ymotion - rotation)*0.9;
