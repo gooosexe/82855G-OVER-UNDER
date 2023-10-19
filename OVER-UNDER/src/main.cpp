@@ -1,6 +1,10 @@
 #include "main.h"
 #include "electronics.h"
 
+// some global variables
+bool armState = false;
+
+
 void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
@@ -36,6 +40,12 @@ void opcontrol() {
 	while (true) {
 		double ymotion = master.get_analog(ANALOG_LEFT_Y);
 		double rotation = master.get_analog(ANALOG_RIGHT_X);
+
+		if (master.get_digital(DIGITAL_L1)) {
+			// flip arm state and activate arm
+			armState = !armState;
+			(armState) ? armLeft.set_value(true) : armLeft.set_value(false);
+		}
 
 		left_drive = (ymotion + rotation)*0.9;
 		right_drive = (ymotion - rotation)*0.9;
