@@ -47,4 +47,5 @@ void opcontrol() {
 
 		pros::lcd::set_text(1, std::to_string(ymotion));
 		pros::lcd::set_text(2, std::to_string(rotation));
+	}	
 }
