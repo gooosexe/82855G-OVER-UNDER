@@ -4,7 +4,7 @@
 // some global variables
 bool armState = false;
 
-
+// yeah i dont think we'll ever need this
 void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
@@ -41,20 +41,10 @@ void opcontrol() {
 		double ymotion = master.get_analog(ANALOG_LEFT_Y);
 		double rotation = master.get_analog(ANALOG_RIGHT_X);
 
-		if (master.get_digital(DIGITAL_L1)) {
-			// flip arm state
-			armState = !armState;
-			(armState) ? armLeft.set_value(true) : armLeft.set_value(false);
-		}
-
-		if (master.get_digital(DIGITAL_A)) mtr_cata.move_absolute(mtr_cata.get_position() + 180, 1000); 
-
-		left_drive = (ymotion + rotation)*0.9;
-		right_drive = (ymotion - rotation)*0.9;
+		wings.set_value(master.get_digital(DIGITAL_L1));
+		if (master.get_digital(DIGITAL_B)) mtr_flywheel = 128;
+		else mtr_flywheel = 0;
 
 		pros::lcd::set_text(1, std::to_string(ymotion));
 		pros::lcd::set_text(2, std::to_string(rotation));
-
-		pros::delay(10);
-	}
 }
