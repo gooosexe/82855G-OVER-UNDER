@@ -39,7 +39,7 @@ void autonomous() {}
 void opcontrol() {
 	while (true) {
 		double ymotion = master.get_analog(ANALOG_LEFT_Y);
-		double rotation = master.get_analog(ANALOG_RIGHT_X);
+		double rotation = master.get_analog(ANALOG_RIGHT_X) * 0.75;
 
 		// if (master.get_digital(DIGITAL_L1)) {
 		// 	wingState = !wingState;
