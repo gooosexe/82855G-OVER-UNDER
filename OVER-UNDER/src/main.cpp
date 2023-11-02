@@ -41,10 +41,12 @@ void opcontrol() {
 		double ymotion = master.get_analog(ANALOG_LEFT_Y);
 		double rotation = master.get_analog(ANALOG_RIGHT_X);
 
-		if (master.get_digital(DIGITAL_L1)) {
-			wingState = !wingState;
-			wings.set_value(wingState);
-		}
+		// if (master.get_digital(DIGITAL_L1)) {
+		// 	wingState = !wingState;
+		// 	wings.set_value(wingState);
+		// }
+
+		wings.set_value(master.get_digital(DIGITAL_L2));
 
 		if (master.get_digital(DIGITAL_B)) mtr_flywheel = 128;
 		else mtr_flywheel = 0;
