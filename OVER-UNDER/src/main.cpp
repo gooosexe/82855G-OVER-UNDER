@@ -1,25 +1,26 @@
 #include "main.h"
+#include "auton.h"
 #include "electronics.h"
 
 // some global variables
 bool wingState = false;
+float drivePower = 0.9;
+const double rotationPower = 0.7;
+const double rotationCoefficient = (127*rotationPower)/pow(127, 3);
 
-// yeah i dont think we'll ever need this
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
-}
+/*
+P: Proportional to the position from the goal
+I: Proportional to the sum of errors from the goal 
+D: Proportional to the derivative of the position from the goal (velocity)
+*/
+
+extern const lv_img_dsc_t funiiimage;
 
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
-
-	pros::lcd::register_btn1_cb(on_center_button);
+	lv_obj_t * img1 = lv_img_create(lv_scr_act(), NULL);
+	lv_img_set_src(img1, &funiiimage);
+	lv_obj_align(img1, NULL, LV_ALIGN_CENTER, 0, 0);
 }
 
 void disabled() {}
@@ -30,7 +31,9 @@ void competition_initialize() {}
  * @brief 
  * Autonomous code.
  */
-void autonomous() {}
+void autonomous() {
+	moveStraight(10);
+}
 
 /**
  * @brief 
@@ -38,23 +41,19 @@ void autonomous() {}
  */
 void opcontrol() {
 	while (true) {
+		// DRIVETRAIN
 		double ymotion = master.get_analog(ANALOG_LEFT_Y);
-		double rotation = master.get_analog(ANALOG_RIGHT_X) * 0.75;
+		// quadratic turning	
+		double rotation = rotationCoefficient * pow(master.get_analog(ANALOG_RIGHT_X), 3);
+		
+		left_drive = (ymotion + rotation) * drivePower;
+		right_drive = (ymotion - rotation) * drivePower;
 
-		// if (master.get_digital(DIGITAL_L1)) {
-		// 	wingState = !wingState;
-		// 	wings.set_value(wingState);
-		// }
-
+		// WINGS
 		wings.set_value(master.get_digital(DIGITAL_L2));
 
-		if (master.get_digital(DIGITAL_B)) mtr_flywheel = 128;
+		// FLYWHEEL
+		if (master.get_digital(DIGITAL_B)) mtr_flywheel = -127;
 		else mtr_flywheel = 0;
-
-		left_drive = (ymotion + rotation)*0.9;
-		right_drive = (ymotion - rotation) * 0.9;
-
-		pros::lcd::set_text(1, std::to_string(ymotion));
-		pros::lcd::set_text(2, std::to_string(rotation));
 	}	
 }
