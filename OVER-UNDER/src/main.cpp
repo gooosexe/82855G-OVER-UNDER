@@ -14,13 +14,13 @@ I: Proportional to the sum of errors from the goal
 D: Proportional to the derivative of the position from the goal (velocity)
 */
 
-extern const lv_img_dsc_t funiiimage;
+// extern const lv_img_dsc_t funiiimage;
 
 void initialize() {
 	pros::lcd::initialize();
-	lv_obj_t * img1 = lv_img_create(lv_scr_act(), NULL);
+	/*lv_obj_t * img1 = lv_img_create(lv_scr_act(), NULL);
 	lv_img_set_src(img1, &funiiimage);
-	lv_obj_align(img1, NULL, LV_ALIGN_CENTER, 0, 0);
+	lv_obj_align(img1, NULL, LV_ALIGN_CENTER, 0, 0);*/
 }
 
 void disabled() {}
@@ -32,7 +32,7 @@ void competition_initialize() {}
  * Autonomous code.
  */
 void autonomous() {
-	moveStraight(10);
+	turn(90);
 }
 
 /**
@@ -53,7 +53,7 @@ void opcontrol() {
 		wings.set_value(master.get_digital(DIGITAL_L2));
 
 		// FLYWHEEL
-		if (master.get_digital(DIGITAL_B)) mtr_flywheel = -127;
+		if (master.get_digital(DIGITAL_B)) mtr_flywheel = -100;
 		else mtr_flywheel = 0;
 	}	
 }

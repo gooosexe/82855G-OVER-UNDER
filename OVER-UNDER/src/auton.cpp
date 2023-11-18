@@ -7,17 +7,30 @@
 #define M_PI 3.14159265358979323846 
 
 // PID constants
-const double kP = 0;
-const double kD = 0;
-const double kI = 0;
+const double kP = 4;
+const double kD = 0.8;
+const double kI = 0.01;
+const double kPt = 0.5;
+const double kDt = 2;
+const double kIt = 0.01;
 // Smallest distance from the goal
-double errorLimit = 0.001;
+double errorLimit = 0.25;
+double errorLimitAngle = 0.5;
 // PID Variables
 // velocity in inches per second
 
-double velocity, error, steadyStateError;
+double velocity, error, prevError, steadyStateError, errorRate;
 
 std::fstream posDataCSV;
+
+void resetPosition() {
+	mtr_lf.tare_position();
+	mtr_lb.tare_position();
+	mtr_rf.tare_position();
+	mtr_rb.tare_position();
+	mtr_lfh.tare_position();
+	mtr_rfh.tare_position();
+}
 
 /**
  * @brief
@@ -26,8 +39,8 @@ std::fstream posDataCSV;
  */
 double getAveragePosition() {
 	// get average position of all motors (excluding top motors)
-	double avgMotorRot = (mtr_lf.get_position() + mtr_lb.get_position() + mtr_rf.get_position() + mtr_rb.get_position())/4;	
-	return 3.25*M_PI*avgMotorRot*(5/3);
+	double avgMotorRot = (mtr_lf.get_position() + mtr_lb.get_position() + mtr_lfh.get_position() + mtr_rf.get_position() + mtr_rb.get_position() + mtr_rfh.get_position())/6;
+	return 3.25*M_PI*avgMotorRot*(3.0/5.0);
 }
 
 /**
@@ -35,9 +48,7 @@ double getAveragePosition() {
  * Records some useful metrics into a CSV file.
  */
 void recordData() {
-	posDataCSV.open("posData.csv", std::ios::out | std::ios::app);
-	posDataCSV << error << "," << velocity << "," << steadyStateError << "\n";
-	posDataCSV.close();
+	printf("%f,%f,%f\n", error, errorRate, velocity);
 }
 
 /**
@@ -46,25 +57,33 @@ void recordData() {
  * @param distance in inches
  */
 void moveStraight(double distance) {
-	int cycles;
+	resetPosition();
 	steadyStateError = 0;
 	error = distance;
-	while (error > errorLimit) {
-		cycles++;
+	prevError = error;
+	while (std::abs(error) > errorLimit) {
 		// distance subtracted by the average of the four ground motors
 		error = distance - getAveragePosition();
+
+		errorRate = error - prevError;
 		steadyStateError += error;
-		velocity = kP*error + kD*(-velocity) + kI*steadyStateError;
-		if (velocity < 0.01) velocity = 0;
+		velocity = kP*error + kD*errorRate + kI*steadyStateError;
 
 		left_drive = velocity;
 		right_drive = velocity;
-		if (cycles % 10 == 0) recordData();
+
+		recordData();
+
 		pros::lcd::print(1, "error: %f", error);
-		pros::lcd::print(2, "velocity: %f", velocity);
+		pros::lcd::print(2, "error rate: %f", errorRate);
 		pros::lcd::print(3, "steadyStateError: %f", steadyStateError);
-		pros::delay(5);
+		pros::lcd::print(5, "velocity: %f", velocity);
+
+		prevError = error;
+		pros::delay(20);
 	}	
+	left_drive = 0;
+	right_drive = 0;
 }
 
 /**
@@ -73,33 +92,47 @@ void moveStraight(double distance) {
  * @param degrees self explanatory
  */
 void turn(double degrees) {
-	imu.tare_heading();
+	imu_1.tare_heading();
+	imu_2.tare_heading();
+
 	steadyStateError = 0;
-	// makes sure that the degrees is between -180 and 180
-	if (degrees > 180) degrees -= 360;
+	error = degrees;
+	prevError = error;
+	double averageHeading, heading1, heading2;
 
-	while (error > errorLimit) {
+	while (std::abs(error) > errorLimitAngle) {
 		// distance subtracted by the average of the four ground motors
-		error = degrees - imu.get_heading();
+		heading1 = imu_1.get_heading();
+		heading2 = imu_2.get_heading();
+		if (heading1 > 180) heading1 -= 360;
+		if (heading2 > 180) heading2 -= 360;
 
+		averageHeading = (heading1 + heading2)/2;
+		error = degrees - averageHeading;
+		errorRate = error - prevError;
 		steadyStateError += error;
 		// using angular velocity instead of linear velocity
-		velocity = kP*error + kD*(-velocity) + kI*steadyStateError;
-		if (velocity < 0.01) velocity = 0;
+		velocity = kPt*error + kDt*errorRate + kIt*steadyStateError;
 
-		// if degrees is positive, turn left
+		// if degrees is positive, turn right
 		if (degrees > 0) {
-			left_drive = -velocity;
-			right_drive = velocity;
-		// if degrees is negative, turn right
-		} else {
 			left_drive = velocity;
 			right_drive = -velocity;
+		// if degrees is negative, turn right
+		} else {
+			left_drive = -velocity;
+			right_drive = velocity;
 		}
 
-		pros::lcd::print(1, "error: %f", error);
-		pros::lcd::print(2, "velocity: %f", velocity);
+		printf("%f,%f,%f,%f\n", averageHeading, error, errorRate, velocity);
+		pros::lcd::print(0,"error: %f", averageHeading);
+		pros::lcd::print(2, "error rate: %f", errorRate);
 		pros::lcd::print(3, "steadyStateError: %f", steadyStateError);
-	}
-}
+		pros::lcd::print(5, "velocity: %f", velocity);
 
+		prevError = error;
+		pros::delay(20);
+	}
+	left_drive = 0;
+	right_drive = 0;
+}
