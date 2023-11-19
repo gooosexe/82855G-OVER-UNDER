@@ -32,7 +32,11 @@ void competition_initialize() {}
  * Autonomous code.
  */
 void autonomous() {
-	turn(90);
+	bool autonSwitch = true;
+
+	// match auton
+	if (autonSwitch) moveStraight(48);
+	else mtr_flywheel = -127;
 }
 
 /**
@@ -51,9 +55,11 @@ void opcontrol() {
 
 		// WINGS
 		wings.set_value(master.get_digital(DIGITAL_L2));
+		// INTAKE
+		intake.set_value(master.get_digital(DIGITAL_R2));
 
 		// FLYWHEEL
-		if (master.get_digital(DIGITAL_B)) mtr_flywheel = -100;
+		if (master.get_digital(DIGITAL_B)) mtr_flywheel = -127;
 		else mtr_flywheel = 0;
 	}	
 }
