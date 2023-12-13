@@ -13,6 +13,7 @@ pros::Motor_Group right_drive({mtr_rf, mtr_rb, mtr_rfh});
 
 pros::ADIDigitalOut wings('A', false);
 pros::ADIDigitalOut intake('C', false);
+pros::ADIDigitalOut flydick('B', false);
 pros::IMU imu_1(19);
 pros::IMU imu_2(16);
 

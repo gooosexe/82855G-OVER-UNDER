@@ -51,6 +51,13 @@ void recordData() {
     printf("%f,%f,%f\n", error, errorRate, velocity);
 }
 
+
+/*
+P: Proportional to the position from the goal
+I: Proportional to the sum of errors from the goal 
+D: Proportional to the derivative of the position from the goal (velocity)
+*/
+
 /**
  * @brief 
  * Moves the bot in a straight line.

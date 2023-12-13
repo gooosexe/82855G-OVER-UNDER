@@ -8,11 +8,6 @@ float drivePower = 0.9;
 const double rotationPower = 0.7;
 const double rotationCoefficient = (127*rotationPower)/pow(127, 3);
 
-/*
-P: Proportional to the position from the goal
-I: Proportional to the sum of errors from the goal 
-D: Proportional to the derivative of the position from the goal (velocity)
-*/
 
 // extern const lv_img_dsc_t funiiimage;
 
@@ -57,6 +52,9 @@ void opcontrol() {
         wings.set_value(master.get_digital(DIGITAL_L2));
         // INTAKE
         intake.set_value(master.get_digital(DIGITAL_R2));
+        // FLYDICK
+        flydick.set_value(master.get_digital(DIGITAL_A));
+
 
         // FLYWHEEL
         if (master.get_digital(DIGITAL_B)) mtr_flywheel = -127;
