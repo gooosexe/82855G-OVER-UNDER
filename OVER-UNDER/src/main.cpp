@@ -1,5 +1,5 @@
 #include "main.h"
-#include "auton.h"
+//#include "auton.h"
 #include "electronics.h"
 
 // some global variables
@@ -35,8 +35,8 @@ void autonomous() {
 	bool autonSwitch = true;
 
 	// match auton
-	if (autonSwitch) moveStraight(48);
-	else mtr_flywheel = -127;
+	//if (autonSwitch) moveStraight(48);
+	//else mtr_flywheel = -127;
 }
 
 /**
@@ -56,10 +56,17 @@ void opcontrol() {
 		// WINGS
 		wings.set_value(master.get_digital(DIGITAL_L2));
 		// INTAKE
-		intake.set_value(master.get_digital(DIGITAL_R2));
+		if (master.get_digital(DIGITAL_R1)) {
+			mtr_intake = -127;
+		}
+		else if (master.get_digital(DIGITAL_L1)){
+			mtr_intake = 127;
+		} else {
+			mtr_intake = 60;
+		}
 
 		// FLYWHEEL
-		if (master.get_digital(DIGITAL_B)) mtr_flywheel = -127;
-		else mtr_flywheel = 0;
+		// if (master.get_digital(DIGITAL_B)) mtr_flywheel = -127;
+		// else mtr_flywheel = 0;
 	}	
 }
