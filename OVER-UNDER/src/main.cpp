@@ -56,10 +56,10 @@ void opcontrol() {
 		// WINGS
 		wings.set_value(master.get_digital(DIGITAL_L2));
 		// INTAKE
-		if (master.get_digital(DIGITAL_R1)) {
+		if (master.get_digital(DIGITAL_L1)) {
 			mtr_intake = 127;
 		}
-		else if (master.get_digital(DIGITAL_L1)){
+		else if (master.get_digital(DIGITAL_R1)){
 			mtr_intake = -127;
 		} else {
 			mtr_intake = -60;
