@@ -66,7 +66,7 @@ void opcontrol() {
 		}
 
 		// FLYWHEEL
-		// if (master.get_digital(DIGITAL_B)) mtr_flywheel = -127;
-		// else mtr_flywheel = 0;
+		if (master.get_digital(DIGITAL_B)) mtr_flywheel = -127;
+		else mtr_flywheel = 0;
 	}	
 }
