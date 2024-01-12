@@ -78,7 +78,6 @@ void moveStraight(double distance) {
 		pros::lcd::print(2, "error rate: %f", errorRate);
 		pros::lcd::print(3, "steadyStateError: %f", steadyStateError);
 		pros::lcd::print(5, "velocity: %f", velocity);
-		pros::lcd::print("nut in my butt");
 
 		prevError = error;
 		pros::delay(20);
@@ -137,3 +136,22 @@ void turn(double degrees) {
 	left_drive = 0;
 	right_drive = 0;
 }
+
+void skillsAuton(){
+	mtr_flywheel = -127;
+	pros::delay(90000);
+	mtr_flywheel = 0;
+}
+
+void closeAuton(){
+//goal is to score 2 triballs and touch elevation bar
+
+
+}
+
+void farAuton(){
+//goal is to score 5 triballs: 1 preload 1 matchload 3 field triballs and touch elevation bar
+
+
+}
+

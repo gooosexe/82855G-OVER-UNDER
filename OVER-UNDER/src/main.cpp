@@ -1,5 +1,5 @@
 #include "main.h"
-//#include "auton.h"
+#include "auton.h"
 #include "electronics.h"
 
 // some global variables
@@ -32,7 +32,22 @@ void competition_initialize() {}
  * Autonomous code.
  */
 void autonomous() {
-	bool autonSwitch = true;
+	//auton switch
+	// 0 = skills
+	// 1 = close
+	// 2 = far
+	int autonSwitch = 1;
+
+
+	if (autonSwitch == 0) {
+		skillsAuton();
+
+	} else if (autonSwitch == 1) {
+		closeAuton()
+		
+	} else if (autonSwitch == 2) {
+		farAuton();
+	}
 
 	// match auton
 	//if (autonSwitch) moveStraight(48);
