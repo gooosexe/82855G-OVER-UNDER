@@ -78,6 +78,7 @@ void moveStraight(double distance) {
 		pros::lcd::print(2, "error rate: %f", errorRate);
 		pros::lcd::print(3, "steadyStateError: %f", steadyStateError);
 		pros::lcd::print(5, "velocity: %f", velocity);
+		pros::lcd::print("nut in my butt");
 
 		prevError = error;
 		pros::delay(20);
