@@ -143,3 +143,21 @@ void turn(double degrees) {
     left_drive = 0;
     right_drive = 0;
 }
+
+void skillsAuton(){
+    mtr_flywheel = -127;
+    pros::delay(90000);
+    mtr_flywheel = 0;
+}
+
+void closeAuton(){
+//goal is to score 2 triballs and touch elevation bar
+
+
+}
+
+void farAuton(){
+//goal is to score 5 triballs: 1 preload 1 matchload 3 field triballs and touch elevation bar
+
+
+}

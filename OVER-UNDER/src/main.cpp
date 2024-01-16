@@ -27,11 +27,23 @@ void competition_initialize() {}
  * Autonomous code.
  */
 void autonomous() {
-    bool autonSwitch = true;
+    //auton switch
+    // 0 = skills
+    // 1 = close
+    // 2 = far
+    int autonSwitch = 1;
+
+    if (autonSwitch == 0) {
+        skillsAuton();
+    } else if (autonSwitch == 1) {
+        closeAuton()
+    } else if (autonSwitch == 2) {
+        farAuton();
+    }
 
     // match auton
-    if (autonSwitch) moveStraight(48);
-    else mtr_flywheel = -127;
+    //if (autonSwitch) moveStraight(48);
+    //else mtr_flywheel = -127;
 }
 
 /**
@@ -42,22 +54,27 @@ void opcontrol() {
     while (true) {
         // DRIVETRAIN
         double ymotion = master.get_analog(ANALOG_LEFT_Y);
-        // quadratic turning    
+        // quadratic turning	
         double rotation = rotationCoefficient * pow(master.get_analog(ANALOG_RIGHT_X), 3);
-        
+
         left_drive = (ymotion + rotation) * drivePower;
         right_drive = (ymotion - rotation) * drivePower;
 
         // WINGS
         wings.set_value(master.get_digital(DIGITAL_L2));
         // INTAKE
-        intake.set_value(master.get_digital(DIGITAL_R2));
-        // FLYDICK
-        flydick.set_value(master.get_digital(DIGITAL_A));
-
+        if (master.get_digital(DIGITAL_L1)) {
+            mtr_intake = 127;
+        }
+        else if (master.get_digital(DIGITAL_R1)){
+            mtr_intake = -127;
+        } else {
+            mtr_intake = -60;
+        }
 
         // FLYWHEEL
         if (master.get_digital(DIGITAL_B)) mtr_flywheel = -127;
         else mtr_flywheel = 0;
-    }    
+    }	
+
 }
