@@ -5,3 +5,6 @@ extern double velocity, error, steadyStateError;
 
 void moveStraight(double distance);
 void turn(double degrees);
+void skillsAuton();
+void closeAuton();
+void farAuton();
