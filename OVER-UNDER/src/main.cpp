@@ -36,7 +36,7 @@ void autonomous() {
     if (autonSwitch == 0) {
         skillsAuton();
     } else if (autonSwitch == 1) {
-        closeAuton()
+        closeAuton();
     } else if (autonSwitch == 2) {
         farAuton();
     }
