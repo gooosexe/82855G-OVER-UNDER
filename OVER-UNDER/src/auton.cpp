@@ -151,13 +151,14 @@ void skillsAuton(){
 }
 
 void closeAuton(){
-//goal is to score 2 triballs and touch elevation bar
-
-
+	// goal is AWP
+	// score alliance triball, get other triball out of zone, and touch elevation bar
+	
 }
 
 void farAuton(){
-//goal is to score 5 triballs: 1 preload 1 matchload 3 field triballs and touch elevation bar
+	// goal is to score at least 4 triballs: 1 preload 3 field triballs and maybe touch elevation bar
+	
 
 
 }

@@ -5,7 +5,7 @@
 // some global variables
 bool wingState = false;
 float drivePower = 0.9;
-const double rotationPower = 0.7;
+const double rotationPower = 0.9;
 const double rotationCoefficient = (127*rotationPower)/pow(127, 3);
 
 
