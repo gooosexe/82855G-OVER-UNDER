@@ -3,10 +3,14 @@
 #include "electronics.h"
 
 // some global variables
+// 0 = skills
+// 1 = close
+// 2 = far
 bool wingState = false;
 float drivePower = 0.9;
 const double rotationPower = 0.9;
 const double rotationCoefficient = (127*rotationPower)/pow(127, 3);
+int autonSwitch = 2;
 
 
 // extern const lv_img_dsc_t funiiimage;
@@ -28,22 +32,13 @@ void competition_initialize() {}
  */
 void autonomous() {
 	//auton switch
-	// 0 = skills
-	// 1 = close
-	// 2 = far
-	int autonSwitch = 1;
-
-	if (autonSwitch == 0) {
+		if (autonSwitch == 0) {
 		skillsAuton();
 	} else if (autonSwitch == 1) {
 		closeAuton();
 	} else if (autonSwitch == 2) {
 		farAuton();
 	}
-
-	// match auton
-	//if (autonSwitch) moveStraight(48);
-	//else mtr_flywheel = -127;
 }
 
 /**
@@ -60,6 +55,7 @@ void opcontrol() {
 		left_drive = (ymotion + rotation) * drivePower;
 		right_drive = (ymotion - rotation) * drivePower;
 
+		blocker.set_value(master.get_digital(DIGITAL_A));
 		// WINGS
 		wings.set_value(master.get_digital(DIGITAL_L2));
 		// INTAKE
@@ -69,7 +65,7 @@ void opcontrol() {
 		else if (master.get_digital(DIGITAL_R1)){
 			mtr_intake = -127;
 		} else {
-			mtr_intake = -60;
+			mtr_intake = -127;
 		}
 
 		// FLYWHEEL
