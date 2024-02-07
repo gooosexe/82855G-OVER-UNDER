@@ -11,7 +11,7 @@ const double kP = 5;
 const double kD = 1.5; // 1.5
 const double kI = 0.04; // 0.04
 const double kPt = 2;
-const double kDt = 1;
+const double kDt = 2;
 const double kIt = 0;
 // Smallest distance from the goal
 double errorLimit = 0.05;
@@ -82,7 +82,7 @@ void moveStraight(double distance) {
 		velocity = kP*error + kD*errorRate + kI*steadyStateError;
 
 		left_drive = velocity;
-		right_drive = 0.95*velocity;
+		right_drive = 0.9*velocity;
 
 		recordData();
 
@@ -104,7 +104,7 @@ void moveStraight(double distance) {
  * Turns the bot in place.
  * @param degrees self explanatory
  */
-void turn(double degrees) {
+void turn(double degrees, double time) {
 	imu_1.tare_heading();
 	imu_2.tare_heading();
 	printf("imu_1: %f\n", imu_1.get_heading());
@@ -115,7 +115,7 @@ void turn(double degrees) {
 	prevError = error;
 	double averageHeading, heading1, heading2;
 
-	while (countCheck < 40) {
+	while (countCheck < (time/20)) {
 		countCheck++;
 		// distance subtracted by the average of the four ground motors
 		heading1 = imu_1.get_heading();
@@ -157,50 +157,74 @@ void turn(double degrees) {
 }
 
 void skillsAuton(){
-	mtr_flywheel = -127;
-	pros::delay(90000);
-	mtr_flywheel = 0;
+	for (int i = 0; i < 8; i++) {
+		moveStraight(60);
+		pros::delay(20);
+		moveStraight(-60);
+		pros::delay(5000);
+	}
 }
 
 void closeAuton(){
 	// goal is AWP
 	mtr_intake.move(10);
 	moveStraight(-40);
-	turn(-20);
+	turn(-20, 750);
 	moveStraight(24);
 	pros::delay(100);
 	wings.set_value(true);
 	pros::delay(100);
-	turn(-30);
+	turn(-30, 750);
 	moveStraight(10);
 	wings.set_value(false);
-	turn(-25);
+	turn(-25, 750);
 	moveStraight(48);
 }
 
-void farAuton() {
-	// goal is to score at least 4 triballs: 1 preload 3 field triballs and maybe touch elevation b
-	mtr_intake.move(20);
-	mtr_intake = -127;
-
-	moveStraight(48);
-	moveStraight(-12);
-	turn(-75);
-	moveStraight(50);
-	moveStraight(-10);
-	turn(140);
-	moveStraight(50);
-	moveStraight(-12);
-	turn(180);
-	moveStraight(18);
-	turn(180);
-	moveStraight(30);
-	moveStraight(-18);
-	turn(180);
-	moveStraight(48);
-	turn(180);
-	moveStraight(52);
-	//moveStraight(-40);
-	//moveStraight(40);
+void farAuton(int type) {
+	switch (type) {
+		case 0:
+			mtr_intake = 127;
+			pros::delay(100);
+			mtr_intake = -127;
+			moveStraight(30);
+			mtr_intake = 127; // deposit preload
+			turn(-90, 1000);
+			mtr_intake = -127;
+			moveStraight(24); // intake ball 1
+			turn(135, 1000); //deposit
+			moveStraight(24);
+			mtr_intake = 127;
+			moveStraight(-10);
+			turn(-90, 1000);
+			mtr_intake = -127; // intake
+			moveStraight(15);
+			turn(135, 1000);
+			//wings
+			wings.set_value(true);
+			moveStraight(50);
+			moveStraight(-20);
+			moveStraight(30);
+			moveStraight(-20);
+			moveStraight(30);
+			break;
+		case 1: // new plan
+			mtr_intake = 127;
+			pros::delay(100);
+			mtr_intake = -127;
+			moveStraight(45);
+			turn(90, 1000);
+			moveStraight(30);
+			turn(-130, 750);
+			moveStraight(15);
+			turn(135, 750);
+			moveStraight(50);
+			/*moveStraight(-10);
+			turn(180, 2000);
+			moveStraight(50);
+			turn(170, 2000);
+			moveStraight(50);*/
+			break;
+	}
 }
 

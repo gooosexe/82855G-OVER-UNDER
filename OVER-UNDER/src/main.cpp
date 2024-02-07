@@ -37,7 +37,7 @@ void autonomous() {
 	} else if (autonSwitch == 1) {
 		closeAuton();
 	} else if (autonSwitch == 2) {
-		farAuton();
+		farAuton(1);
 	}
 }
 

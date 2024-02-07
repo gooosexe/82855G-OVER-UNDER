@@ -6,8 +6,8 @@ pros::Motor mtr_rf(16, pros::E_MOTOR_GEAR_BLUE, false, pros::E_MOTOR_ENCODER_ROT
 pros::Motor mtr_rb(9, pros::E_MOTOR_GEAR_BLUE, false, pros::E_MOTOR_ENCODER_ROTATIONS);
 pros::Motor mtr_lfh(6, pros::E_MOTOR_GEAR_BLUE, false, pros::E_MOTOR_ENCODER_ROTATIONS);
 pros::Motor mtr_rfh(10, pros::E_MOTOR_GEAR_BLUE, true, pros::E_MOTOR_ENCODER_ROTATIONS);
-pros::Motor mtr_intake(1, pros::E_MOTOR_GEAR_BLUE, false, pros::E_MOTOR_ENCODER_ROTATIONS);
-pros::Motor mtr_flywheel(20, pros::E_MOTOR_GEAR_BLUE, false, pros::E_MOTOR_ENCODER_ROTATIONS);
+pros::Motor mtr_intake(20, pros::E_MOTOR_GEAR_BLUE, false, pros::E_MOTOR_ENCODER_ROTATIONS);
+pros::Motor mtr_flywheel(1, pros::E_MOTOR_GEAR_BLUE, false, pros::E_MOTOR_ENCODER_ROTATIONS);
 
 pros::Motor_Group left_drive({mtr_lf, mtr_lb, mtr_lfh});
 pros::Motor_Group right_drive({mtr_rf, mtr_rb, mtr_rfh});

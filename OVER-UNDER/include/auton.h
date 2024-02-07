@@ -7,4 +7,4 @@ void moveStraight(double distance);
 void turn(double degrees);
 void skillsAuton();
 void closeAuton();
-void farAuton();
+void farAuton(int type);
