@@ -8,6 +8,7 @@
 
 // PID constants
 const double kP = 5;
+
 const double kD = 1.5; // 1.5
 const double kI = 0.04; // 0.04
 const double kPt = 2;
@@ -15,7 +16,6 @@ const double kDt = 2;
 const double kIt = 0;
 // Smallest distance from the goal
 double errorLimit = 0.05;
-double errorLimitAngle = 0.5;
 int countCheck = 0;
 // PID Variables
 // velocity in inches per second
@@ -29,8 +29,8 @@ void resetPosition() {
 	mtr_lb.tare_position();
 	mtr_rf.tare_position();
 	mtr_rb.tare_position();
-	mtr_lfh.tare_position();
-	mtr_rfh.tare_position();
+	mtr_lbh.tare_position();
+	mtr_rbh.tare_position();
 }
 
 /**
@@ -41,7 +41,8 @@ void resetPosition() {
 double getAveragePosition() {
 	//printf("%d,%d,%d,%d,%d,%d\n", mtr_lf.get_position(), mtr_lb.get_position(), mtr_lfh.get_position(), mtr_rf.get_position(), mtr_rb.get_position(), mtr_rfh.get_position());
 	// get average position of all motors (excluding top motors)
-	double avgMotorRot = (mtr_lf.get_position() + mtr_lb.get_position() + mtr_lfh.get_position() + mtr_rf.get_position() + mtr_rb.get_position() + mtr_rfh.get_position())/6;
+	//double avgMotorRot = (left_drive.get_position() + right_drive.get_position())/2;
+	double avgMotorRot = (mtr_lf.get_position() + mtr_lb.get_position() + mtr_lbh.get_position() + mtr_rf.get_position() + mtr_rb.get_position() + mtr_rbh.get_position())/6;
 	return 3.25*M_PI*avgMotorRot*(3.0/5.0);
 }
 
@@ -115,7 +116,7 @@ void turn(double degrees, double time) {
 	prevError = error;
 	double averageHeading, heading1, heading2;
 
-	while (countCheck < (time/20)) {
+	while (error > 0.5) {
 		countCheck++;
 		// distance subtracted by the average of the four ground motors
 		heading1 = imu_1.get_heading();
@@ -131,7 +132,7 @@ void turn(double degrees, double time) {
 		steadyStateError += error;
 		// using angular velocity instead of linear velocity
 		velocity = kPt*error + kDt*errorRate + kIt*steadyStateError;
-		
+		if (velocity > 100) velocity = 100;	
 		// if degrees is positive, turn right
 		if (degrees > 0) {
 			left_drive = velocity;
@@ -141,12 +142,12 @@ void turn(double degrees, double time) {
 			left_drive = -velocity;
 			right_drive = velocity;
 		}
-
+		/*
 		printf("%f,%f,%f,%f,%f\n", averageHeading, error, errorRate, velocity, steadyStateError);
 		pros::lcd::print(0,"error: %f", averageHeading);
 		pros::lcd::print(2, "error rate: %f", errorRate);
 		pros::lcd::print(3, "steadyStateError: %f", steadyStateError);
-		pros::lcd::print(5, "velocity: %f", velocity);
+		pros::lcd::print(5, "velocity: %f", velocity);*/
 
 		prevError = error;
 		pros::delay(20);
@@ -187,19 +188,24 @@ void farAuton(int type) {
 			mtr_intake = 127;
 			pros::delay(100);
 			mtr_intake = -127;
+
 			moveStraight(30);
 			mtr_intake = 127; // deposit preload
+
 			turn(-90, 1000);
 			mtr_intake = -127;
 			moveStraight(24); // intake ball 1
+			
 			turn(135, 1000); //deposit
 			moveStraight(24);
 			mtr_intake = 127;
+
 			moveStraight(-10);
 			turn(-90, 1000);
 			mtr_intake = -127; // intake
 			moveStraight(15);
 			turn(135, 1000);
+
 			//wings
 			wings.set_value(true);
 			moveStraight(50);
@@ -208,7 +214,7 @@ void farAuton(int type) {
 			moveStraight(-20);
 			moveStraight(30);
 			break;
-		case 1: // new plan
+		case 1: // old auton
 			mtr_intake = 127;
 			pros::delay(100);
 			mtr_intake = -127;
