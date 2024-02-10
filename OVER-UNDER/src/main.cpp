@@ -58,6 +58,10 @@ void opcontrol() {
 		blocker.set_value(master.get_digital(DIGITAL_A));
 		// WINGS
 		wings.set_value(master.get_digital(DIGITAL_L2));
+
+		// HANG
+		hang.set_value(master.get_digital(DIGITAL_X));
+
 		// INTAKE
 		if (master.get_digital(DIGITAL_L1)) {
 			mtr_intake = 127;

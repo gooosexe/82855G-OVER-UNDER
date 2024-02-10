@@ -214,8 +214,9 @@ void farAuton(int type) {
 			moveStraight(30);
 			break;
 		case 1: // old auton
-			mtr_intake = -127;
+			mtr_intake = 127;
 			pros::delay(100);
+			mtr_intake = -127;
 			moveStraight(45);
 			turn(90, 1000);
 			moveStraight(30);
