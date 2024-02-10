@@ -15,7 +15,7 @@ pros::Motor_Group right_drive({mtr_rf, mtr_rb, mtr_rbh});
 pros::ADIDigitalOut wings('H', false);
 pros::ADIDigitalOut blocker('A', false);
 
-pros::IMU imu_1(2);
+pros::IMU imu_1(12);
 pros::IMU imu_2(7);
 
 pros::Controller master(CONTROLLER_MASTER);

@@ -8,7 +8,6 @@
 
 // PID constants
 const double kP = 5;
-
 const double kD = 1.5; // 1.5
 const double kI = 0.04; // 0.04
 const double kPt = 2;
@@ -116,7 +115,7 @@ void turn(double degrees, double time) {
 	prevError = error;
 	double averageHeading, heading1, heading2;
 
-	while (error > 0.5) {
+	while (countCheck < (time/20)) {
 		countCheck++;
 		// distance subtracted by the average of the four ground motors
 		heading1 = imu_1.get_heading();
@@ -215,9 +214,8 @@ void farAuton(int type) {
 			moveStraight(30);
 			break;
 		case 1: // old auton
-			mtr_intake = 127;
-			pros::delay(100);
 			mtr_intake = -127;
+			pros::delay(100);
 			moveStraight(45);
 			turn(90, 1000);
 			moveStraight(30);
@@ -230,6 +228,10 @@ void farAuton(int type) {
 			moveStraight(50);
 			turn(170, 2000);
 			moveStraight(50);*/
+			break;
+		case 2: // testing case
+			moveStraight(20);
+			turn(90, 1000);
 			break;
 	}
 }
