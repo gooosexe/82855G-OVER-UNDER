@@ -53,7 +53,7 @@ void opcontrol() {
 		double rotation = rotationCoefficient * pow(master.get_analog(ANALOG_RIGHT_X), 3);
 
 		left_drive = (ymotion + rotation) * drivePower;
-		right_drive = (ymotion - rotation) * drivePower;
+		right_drive = 0.9*(ymotion - rotation) * drivePower;
 
 		blocker.set_value(master.get_digital(DIGITAL_A));
 		// WINGS
@@ -72,9 +72,7 @@ void opcontrol() {
 			mtr_intake = -127;
 		}
 
-		// FLYWHEEL
-		if (master.get_digital(DIGITAL_B)) mtr_flywheel = -127;
-		else mtr_flywheel = 0;
+		
 	}	
 
 }
