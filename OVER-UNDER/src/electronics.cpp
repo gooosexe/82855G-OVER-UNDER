@@ -14,7 +14,7 @@ pros::Motor_Group right_drive({mtr_rf, mtr_rb, mtr_rbh});
 
 pros::ADIDigitalOut wings('H', false);
 pros::ADIDigitalOut blocker('A', false);
-pros::ADIDigitalOut hang('B', true);
+pros::ADIDigitalOut hang('B', false);
 
 pros::IMU imu_1(7);
 pros::IMU imu_2(12);

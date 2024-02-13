@@ -82,7 +82,7 @@ void moveStraight(double distance) {
 		velocity = kP*error + kD*errorRate + kI*steadyStateError;
 
 		left_drive = velocity;
-		right_drive = 0.9*velocity;
+		right_drive = 0.95*velocity;
 
 		recordData();
 
@@ -135,11 +135,11 @@ void turn(double degrees, double time) {
 		// if degrees is positive, turn right
 		if (degrees > 0) {
 			left_drive = velocity;
-			right_drive = -velocity;
+			right_drive = -0.95 * velocity;
 		// if degrees is negative, turn right
 		} else {
 			left_drive = -velocity;
-			right_drive = velocity;
+			right_drive = 0.95*velocity;
 		}
 		/*
 		printf("%f,%f,%f,%f,%f\n", averageHeading, error, errorRate, velocity, steadyStateError);
@@ -219,8 +219,13 @@ void farAuton(int type) {
 			mtr_intake = -127;
 			moveStraight(45);
 			turn(90, 1000);
+			moveStraight(40);
+			mtr_intake = 127;
+			moveStraight(-10);
 			moveStraight(30);
-			turn(-130, 750);
+			moveStraight(-10);
+			mtr_intake = -127;
+			turn(-133, 750);
 			moveStraight(15);
 			turn(135, 750);
 			moveStraight(50);
