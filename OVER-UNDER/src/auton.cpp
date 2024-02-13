@@ -41,7 +41,15 @@ double getAveragePosition() {
 	//printf("%d,%d,%d,%d,%d,%d\n", mtr_lf.get_position(), mtr_lb.get_position(), mtr_lfh.get_position(), mtr_rf.get_position(), mtr_rb.get_position(), mtr_rfh.get_position());
 	// get average position of all motors (excluding top motors)
 	//double avgMotorRot = (left_drive.get_position() + right_drive.get_position())/2;
-	double avgMotorRot = (mtr_lf.get_position() + mtr_lb.get_position() + mtr_lbh.get_position() + mtr_rf.get_position() + mtr_rb.get_position() + mtr_rbh.get_position())/6;
+	double avgMotorRot = ( 
+							mtr_lf.get_position() +
+							mtr_lb.get_position() +
+							mtr_lbh.get_position() +
+							mtr_rf.get_position() +
+							mtr_rb.get_position() +
+							mtr_rbh.get_position()
+						)/6;
+
 	return 3.25*M_PI*avgMotorRot*(3.0/5.0);
 }
 
@@ -80,6 +88,8 @@ void moveStraight(double distance, double time) {
 		errorRate = error - prevError;
 		steadyStateError += error;
 		velocity = kP*error + kD*errorRate + kI*steadyStateError;
+	
+		if (velocity > 110) velocity = 110;
 
 		left_drive = velocity;
 		right_drive = 0.95*velocity;
@@ -126,6 +136,7 @@ void turn(double degrees, double time) {
 		steadyStateError += error;
 		// using angular velocity instead of linear velocity
 		velocity = kPt*error + kDt*errorRate + kIt*steadyStateError;
+
 		if (velocity > 100) velocity = 100;	
 		// if degrees is positive, turn right
 		if (degrees > 0) {
@@ -147,7 +158,29 @@ void turn(double degrees, double time) {
 }
 
 void skillsAuton(){
-	
+	mtr_intake = 127; // unload preload
+	pros::delay(500);
+	mtr_intake = -127;
+
+	moveStraight(-30, 800);
+	// run cata for 40 seconds
+	mtr_intake = 127;
+	turn(50, 800);
+	moveStraight(100, 3000);
+	moveStraight(-10, 500);
+	turn(-90, 800);
+	moveStraight(50, 800);
+	turn(90, 800);
+	moveStraight(40, 800);
+	turn(90, 800);
+	wings.set_value(true);
+	moveStraight(50, 800);
+	turn(20, 800);
+	moveStraight(-50, 500);
+	turn(-20, 800);
+	moveStraight(50, 800);
+	moveStraight(-20, 500);
+	moveStraight(50, 800);
 }
 
 void closeAuton(){
