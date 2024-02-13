@@ -8,7 +8,6 @@
 
 // PID constants
 const double kP = 5;
-
 const double kD = 1.5; // 1.5
 const double kI = 0.04; // 0.04
 const double kPt = 2;
@@ -83,7 +82,7 @@ void moveStraight(double distance, double time) {
 		velocity = kP*error + kD*errorRate + kI*steadyStateError;
 
 		left_drive = velocity;
-		right_drive = 0.9*velocity;
+		right_drive = 0.95*velocity;
 
 		recordData();
 
@@ -131,11 +130,11 @@ void turn(double degrees, double time) {
 		// if degrees is positive, turn right
 		if (degrees > 0) {
 			left_drive = velocity;
-			right_drive = -velocity;
+			right_drive = -0.95 * velocity;
 		// if degrees is negative, turn right
 		} else {
 			left_drive = -velocity;
-			right_drive = velocity;
+			right_drive = 0.95*velocity;
 		}
 		// printf("%f,%f,%f,%f,%f\n", averageHeading, error, errorRate, velocity, steadyStateError);
 		
@@ -165,9 +164,11 @@ void farAuton(int type) {
 			mtr_intake = -127;
 			moveStraight(45, 800);
 			turn(90, 1000);
+      
 			moveStraight(30, 800);
 			turn(-130, 750);
 			moveStraight(15, 800);
+      
 			turn(135, 750);
 			moveStraight(50, 800);
 			/*moveStraight(-10);
