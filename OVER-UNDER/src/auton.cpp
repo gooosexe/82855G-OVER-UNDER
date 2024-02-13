@@ -16,7 +16,7 @@ const double kDt = 2;
 const double kIt = 0;
 // Smallest distance from the goal
 double errorLimit = 0.05;
-int countCheck = 0;
+int cycles = 0;
 // PID Variables
 // velocity in inches per second
 
@@ -66,14 +66,14 @@ D: Proportional to the derivative of the position from the goal (velocity)
  * Moves the bot in a straight line.
  * @param distance in inches
  */
-void moveStraight(double distance) {
+void moveStraight(double distance, double time) {
 	resetPosition();
 	steadyStateError = 0;
 	error = distance;
 	prevError = error;
-	while (countCheck < 40) {
+	while (cycles < time/20) {
 
-		countCheck++;
+		cycles++;
 
 		// distance subtracted by the average of the four ground motors
 		error = distance - getAveragePosition();
@@ -87,15 +87,10 @@ void moveStraight(double distance) {
 
 		recordData();
 
-		pros::lcd::print(1, "error: %f", error);
-		pros::lcd::print(2, "error rate: %f", errorRate);
-		pros::lcd::print(3, "steadyStateError: %f", steadyStateError);
-		pros::lcd::print(5, "velocity: %f", velocity);
-
 		prevError = error;
 		pros::delay(20);
 	}	
-	countCheck = 0;
+	cycles = 0;
 	left_drive = 0;
 	right_drive = 0;
 }
@@ -116,8 +111,8 @@ void turn(double degrees, double time) {
 	prevError = error;
 	double averageHeading, heading1, heading2;
 
-	while (error > 0.5) {
-		countCheck++;
+	while (cycles < time/20) {
+		cycles++;
 		// distance subtracted by the average of the four ground motors
 		heading1 = imu_1.get_heading();
 		heading2 = imu_2.get_heading();
@@ -142,94 +137,79 @@ void turn(double degrees, double time) {
 			left_drive = -velocity;
 			right_drive = velocity;
 		}
-		/*
-		printf("%f,%f,%f,%f,%f\n", averageHeading, error, errorRate, velocity, steadyStateError);
-		pros::lcd::print(0,"error: %f", averageHeading);
-		pros::lcd::print(2, "error rate: %f", errorRate);
-		pros::lcd::print(3, "steadyStateError: %f", steadyStateError);
-		pros::lcd::print(5, "velocity: %f", velocity);*/
-
+		// printf("%f,%f,%f,%f,%f\n", averageHeading, error, errorRate, velocity, steadyStateError);
+		
 		prevError = error;
 		pros::delay(20);
 	}
-	countCheck = 0;
+	cycles = 0;
 	left_drive = 0;
 	right_drive = 0;
 }
 
 void skillsAuton(){
-	for (int i = 0; i < 8; i++) {
-		moveStraight(60);
-		pros::delay(20);
-		moveStraight(-60);
-		pros::delay(5000);
-	}
+	
 }
 
 void closeAuton(){
-	// goal is AWP
-	mtr_intake.move(10);
-	moveStraight(-40);
-	turn(-20, 750);
-	moveStraight(24);
-	pros::delay(100);
-	wings.set_value(true);
-	pros::delay(100);
-	turn(-30, 750);
-	moveStraight(10);
-	wings.set_value(false);
-	turn(-25, 750);
-	moveStraight(48);
+	// wing triball out of matchload zone
+	// push both balls into goal
+	// come back and touch elevation bar with ass
 }
 
 void farAuton(int type) {
 	switch (type) {
-		case 0:
+		case 4: 
 			mtr_intake = 127;
 			pros::delay(100);
 			mtr_intake = -127;
-
-			moveStraight(30);
-			mtr_intake = 127; // deposit preload
-
-			turn(-90, 1000);
-			mtr_intake = -127;
-			moveStraight(24); // intake ball 1
-			
-			turn(135, 1000); //deposit
-			moveStraight(24);
-			mtr_intake = 127;
-
-			moveStraight(-10);
-			turn(-90, 1000);
-			mtr_intake = -127; // intake
-			moveStraight(15);
-			turn(135, 1000);
-
-			//wings
-			wings.set_value(true);
-			moveStraight(50);
-			moveStraight(-20);
-			moveStraight(30);
-			moveStraight(-20);
-			moveStraight(30);
-			break;
-		case 1: // old auton
-			mtr_intake = 127;
-			pros::delay(100);
-			mtr_intake = -127;
-			moveStraight(45);
+			moveStraight(45, 800);
 			turn(90, 1000);
-			moveStraight(30);
+			moveStraight(30, 800);
 			turn(-130, 750);
-			moveStraight(15);
+			moveStraight(15, 800);
 			turn(135, 750);
-			moveStraight(50);
+			moveStraight(50, 800);
 			/*moveStraight(-10);
 			turn(180, 2000);
 			moveStraight(50);
 			turn(170, 2000);
 			moveStraight(50);*/
+			break;
+		case 5: // 5 ball
+			/* facing center of field */
+			/* unlatch intake */
+			mtr_intake = 127;
+			pros::delay(500); // unload preload
+
+			mtr_intake = -127;
+			turn(-90, 1000); // turn towards elevation ball
+			moveStraight(24, 800); // grab it
+
+			moveStraight(-24, 800); // back up
+			turn(90, 1000); // turn towards goal
+			moveStraight(40, 800);
+			mtr_intake = 127; // unload
+			pros::delay(500);
+			mtr_intake = -127;
+
+			turn(-90, 1000); 
+			moveStraight(24, 800); // grab first triball
+			turn(135, 1000); // turn towards goal
+			mtr_intake = 127; // unload
+			pros::delay(500);
+			mtr_intake = -127;
+
+			turn(-45, 1000); // turn towards second triball
+			moveStraight(24, 800); // grab it
+			turn(90, 1000); // turn towards goal
+			wings.set_value(true); // wings!
+
+			moveStraight(60, 800); // smash cycle
+			moveStraight(-20, 500);
+			moveStraight(50, 500);
+			moveStraight(-20, 500);
+			moveStraight(50, 500);
 			break;
 	}
 }
