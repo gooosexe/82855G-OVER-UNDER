@@ -50,8 +50,8 @@ void opcontrol() {
 	int Kp = 0;
 	int Ki = 0;
 	int Kd = 0;
-	int target = 250;
-	double error, steadyStateError, prevError, errorRate, velocity;
+	int target = 300;
+	double error, steadyStateError, prevError, errorRate, velocity, curVel;
 
 	while (true) {
 		// DRIVETRAIN
@@ -62,19 +62,23 @@ void opcontrol() {
 		left_drive = (ymotion + rotation) * drivePower;
 		right_drive = 0.9*(ymotion - rotation) * drivePower;
 
-		blocker.set_value(master.get_digital(DIGITAL_A));
+		//blocker.set_value(master.get_digital(DIGITAL_A));
+
 		// WINGS
-		wings.set_value(master.get_digital(DIGITAL_L2));
+		lwing.set_value(master.get_digital(DIGITAL_L2));
+		rwing.set_value(master.get_digital(DIGITAL_R2));
 
 		// flywheel pid loop
-		error = target - mtr_flywheel.get_actual_velocity();
-		steadyStateError += error;
-		errorRate = error - prevError;
-		velocity = Kp*error + Ki*steadyStateError + Kd*errorRate;
-		mtr_flywheel.move_velocity(velocity);	
-
+		if (master.get_digital(DIGITAL_B)) {
+			curVel = mtr_flywheel.get_actual_velocity();
+			error = target - curVel;
+			steadyStateError += error;
+			errorRate = error - prevError;
+			velocity = Kp*error + Ki*steadyStateError + Kd*errorRate;
+			mtr_flywheel.move_velocity(curVel + velocity);	
+		}
 		// HANG
-		hang.set_value(master.get_digital(DIGITAL_X));
+		//hang.set_value(master.get_digital(DIGITAL_X));
 
 		// INTAKE
 		if (master.get_digital(DIGITAL_L1)) {

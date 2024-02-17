@@ -2,7 +2,7 @@
 #include "main.h"
 
 extern pros::Motor mtr_lf, mtr_lb, mtr_lbh, mtr_rf, mtr_rb, mtr_rbh, mtr_intake, mtr_flywheel;
-extern pros::ADIDigitalOut wings, intake, blocker, hang;
+extern pros::ADIDigitalOut lwing, rwing, intake, blocker, hang;
 extern pros::IMU imu_1, imu_2;
 
 extern pros::Controller master;

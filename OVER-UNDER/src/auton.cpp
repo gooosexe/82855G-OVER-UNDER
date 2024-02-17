@@ -173,7 +173,8 @@ void skillsAuton(){
 	turn(90, 800);
 	moveStraight(40, 800);
 	turn(90, 800);
-	wings.set_value(true);
+	lwing.set_value(true);
+	rwing.set_value(true);
 	moveStraight(50, 800);
 	turn(20, 800);
 	moveStraight(-50, 500);
@@ -237,7 +238,8 @@ void farAuton(int type) {
 			turn(-45, 1000); // turn towards second triball
 			moveStraight(24, 800); // grab it
 			turn(90, 1000); // turn towards goal
-			wings.set_value(true); // wings!
+			lwing.set_value(true); // wings!
+			rwing.set_value(true);
 
 			moveStraight(60, 800); // smash cycle
 			moveStraight(-20, 500);
