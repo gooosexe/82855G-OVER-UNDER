@@ -10,7 +10,7 @@ bool wingState = false;
 float drivePower = 0.9;
 const double rotationPower = 0.9;
 const double rotationCoefficient = (127*rotationPower)/pow(127, 3);
-int autonSwitch = 2;
+int autonSwitch = 0;
 
 
 // extern const lv_img_dsc_t funiiimage;
@@ -46,6 +46,13 @@ void autonomous() {
  * Driver control.
  */
 void opcontrol() {
+	// flywheel pid loop variables
+	int Kp = 0;
+	int Ki = 0;
+	int Kd = 0;
+	int target = 250;
+	double error, steadyStateError, prevError, errorRate, velocity;
+
 	while (true) {
 		// DRIVETRAIN
 		double ymotion = master.get_analog(ANALOG_LEFT_Y);
@@ -58,6 +65,13 @@ void opcontrol() {
 		blocker.set_value(master.get_digital(DIGITAL_A));
 		// WINGS
 		wings.set_value(master.get_digital(DIGITAL_L2));
+
+		// flywheel pid loop
+		error = target - mtr_flywheel.get_actual_velocity();
+		steadyStateError += error;
+		errorRate = error - prevError;
+		velocity = Kp*error + Ki*steadyStateError + Kd*errorRate;
+		mtr_flywheel.move_velocity(velocity);	
 
 		// HANG
 		hang.set_value(master.get_digital(DIGITAL_X));
@@ -72,7 +86,7 @@ void opcontrol() {
 			mtr_intake = -127;
 		}
 
-		
+		prevError = error;
+		pros::delay(10);
 	}	
-
 }
