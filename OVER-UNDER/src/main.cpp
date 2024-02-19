@@ -47,13 +47,14 @@ void autonomous() {
  */
 void opcontrol() {
 	// flywheel pid loop variables
-	int Kp = 0;
-	int Ki = 0;
-	int Kd = 0;
-	int target = 300;
-	double error, steadyStateError, prevError, errorRate, velocity, curVel;
-
+	double Kp = 3;
+	double Ki = 0;
+	double Kd = 0;
+	double target = 200;
+	double error, steadyStateError, prevError, errorRate, accel, curVel;
+	double time = 0;
 	while (true) {
+		time++;
 		// DRIVETRAIN
 		double ymotion = master.get_analog(ANALOG_LEFT_Y);
 		// quadratic turning	
@@ -74,8 +75,11 @@ void opcontrol() {
 			error = target - curVel;
 			steadyStateError += error;
 			errorRate = error - prevError;
-			velocity = Kp*error + Ki*steadyStateError + Kd*errorRate;
-			mtr_flywheel.move_velocity(curVel + velocity);	
+			accel = Kp*error + Ki*steadyStateError + Kd*errorRate;
+			mtr_flywheel.move_velocity(curVel + accel);	
+			printf("%f,%f,300,%f\n", curVel, accel, time/100);
+		} else {
+			mtr_flywheel.move_velocity(0);
 		}
 		// HANG
 		//hang.set_value(master.get_digital(DIGITAL_X));
