@@ -50,7 +50,7 @@ void opcontrol() {
 	double Kp = 3;
 	double Ki = 0;
 	double Kd = 0;
-	double target = 200;
+	double target = 250;
 	double error, steadyStateError, prevError, errorRate, accel, curVel;
 	double time = 0;
 	while (true) {
