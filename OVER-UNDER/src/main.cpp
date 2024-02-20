@@ -69,6 +69,12 @@ void opcontrol() {
 		lwing.set_value(master.get_digital(DIGITAL_L2));
 		rwing.set_value(master.get_digital(DIGITAL_R2));
 
+		if (master.get_digital(DIGITAL_Y)) {
+			hang.set_value(true);
+		} else {
+			hang.set_value(false);
+		}
+ 
 		// flywheel pid loop
 		if (master.get_digital(DIGITAL_B)) {
 			curVel = mtr_flywheel.get_actual_velocity();
