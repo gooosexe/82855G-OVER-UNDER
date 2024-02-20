@@ -13,6 +13,9 @@ const double kI = 0.04; // 0.04
 const double kPt = 2;
 const double kDt = 2;
 const double kIt = 0;
+const double kPf = 3;
+const double kDf = 0;
+const double kIf = 0.5;
 // Smallest distance from the goal
 double errorLimit = 0.05;
 int cycles = 0;
@@ -157,31 +160,61 @@ void turn(double degrees, double time) {
 	right_drive = 0;
 }
 
+void flywheelPID(int time) {
+	while (cycles < time/20) {
+		cycles++;
+		// flywheel pid loop
+		double target = 250;
+		double curVel = mtr_flywheel.get_actual_velocity();
+		error = target - curVel;
+		steadyStateError += error;
+		errorRate = error - prevError;
+		double accel = kP*error + kI*steadyStateError + kD*errorRate;
+		mtr_flywheel.move_velocity(curVel + accel);	
+		printf("%f,%f,200,%f\n", curVel, accel, cycles/100);
+		pros::delay(20);
+	}
+	mtr_flywheel = 0;
+}
+
 void skillsAuton(){
 	mtr_intake = 127; // unload preload
 	pros::delay(500);
 	mtr_intake = -127;
-
 	moveStraight(-30, 800);
-	// run cata for 40 seconds
-	mtr_intake = 127;
-	turn(50, 800);
+	turn(60, 800);
+
+	flywheelPID(3000);
+
+	turn(-60, 800);
 	moveStraight(100, 3000);
-	moveStraight(-10, 500);
-	turn(-90, 800);
+	//smash
+	moveStraight(-20, 500);
+	moveStraight(50, 500);
+	moveStraight(-20, 500);
+
+	turn(90, 800);
 	moveStraight(50, 800);
+	turn(-90, 800);
+	lwing.set_value(true);
+	moveStraight(36, 800);
+	rwing.set_value(true);
+	turn(-90, 800);
+
+	//smash
+	moveStraight(50, 800);
+	moveStraight(-20, 800);
+	moveStraight(50, 800);
+
+	moveStraight(-50, 800);
+	rwing.set_value(false);
 	turn(90, 800);
 	moveStraight(40, 800);
-	turn(90, 800);
-	lwing.set_value(true);
 	rwing.set_value(true);
-	moveStraight(50, 800);
-	turn(20, 800);
-	moveStraight(-50, 500);
-	turn(-20, 800);
-	moveStraight(50, 800);
-	moveStraight(-20, 500);
-	moveStraight(50, 800);
+	turn(-90, 800);
+	moveStraight(24,800);
+	turn(-50, 800);
+	moveStraight(40, 800);
 }
 
 void closeAuton(){

@@ -83,7 +83,7 @@ void opcontrol() {
 			errorRate = error - prevError;
 			accel = Kp*error + Ki*steadyStateError + Kd*errorRate;
 			mtr_flywheel.move_velocity(curVel + accel);	
-			printf("%f,%f,300,%f\n", curVel, accel, time/100);
+			printf("%f,%f,200,%f\n", curVel, accel, time/100);
 		} else {
 			mtr_flywheel.move_velocity(0);
 		}
