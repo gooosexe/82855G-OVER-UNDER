@@ -182,12 +182,13 @@ void skillsAuton(){
 	pros::delay(500);
 	mtr_intake = -127;
 	moveStraight(-30, 800);
-	turn(60, 800);
+	turn(-12, 1000);
 
-	flywheelPID(3000);
+	flywheelPID(30000);
 
-	turn(-60, 800);
-	moveStraight(100, 3000);
+	turn(-15, 800);
+	moveStraight(80, 3000);
+	turn(50, 800);
 	//smash
 	moveStraight(-20, 500);
 	moveStraight(50, 500);
@@ -247,38 +248,51 @@ void farAuton(int type) {
 		case 5: // 5 ball
 			/* facing center of field */
 			/* unlatch intake */
-			mtr_intake = 127;
+			mtr_intake = 100;
 			pros::delay(500); // unload preload
 
 			mtr_intake = -127;
-			turn(-90, 1000); // turn towards elevation ball
-			moveStraight(24, 800); // grab it
+			turn(-90, 700); // turn towards elevation ball
+			moveStraight(26, 800); // grab it
 
-			moveStraight(-24, 800); // back up
-			turn(90, 1000); // turn towards goal
-			moveStraight(40, 800);
+			moveStraight(-23, 800); // back up
+			turn(90, 700); // turn towards goal
+			moveStraight(150, 700);
+			pros::delay(50);
+			turn(90, 600);
 			mtr_intake = 127; // unload
+			pros::delay(500);
+			turn(140, 800);
 			pros::delay(500);
 			mtr_intake = -127;
 
-			turn(-90, 1000); 
-			moveStraight(24, 800); // grab first triball
-			turn(135, 1000); // turn towards goal
-			mtr_intake = 127; // unload
+			moveStraight(26, 800); // grab first triball
+
+			turn(170, 700);
+			mtr_intake = 127;
 			pros::delay(500);
 			mtr_intake = -127;
+			turn(-90, 700);
+			moveStraight(20, 400);
+			pros::delay(200);
+			turn(90,600);
+			mtr_intake = 127;
+			pros::delay(500);
+			                   
+			turn(-20, 800);
 
-			turn(-45, 1000); // turn towards second triball
-			moveStraight(24, 800); // grab it
-			turn(90, 1000); // turn towards goal
-			lwing.set_value(true); // wings!
+			lwing.set_value(true);
 			rwing.set_value(true);
+			pros::delay(100);
+			left_drive.move(127);
+			right_drive.move(127);
+    
 
-			moveStraight(60, 800); // smash cycle
-			moveStraight(-20, 500);
-			moveStraight(50, 500);
-			moveStraight(-20, 500);
-			moveStraight(50, 500);
+			// moveStraight(60, 800); // smash cycle
+			// moveStraight(-20, 500);
+			// moveStraight(50, 500);
+			// moveStraight(-20, 500);
+			// moveStraight(50, 500);
 			break;
 	}
 }

@@ -10,7 +10,7 @@ bool wingState = false;
 float drivePower = 0.9;
 const double rotationPower = 0.9;
 const double rotationCoefficient = (127*rotationPower)/pow(127, 3);
-int autonSwitch = 0;
+int autonSwitch = 2;
 
 
 // extern const lv_img_dsc_t funiiimage;
@@ -37,7 +37,7 @@ void autonomous() {
 	} else if (autonSwitch == 1) {
 		closeAuton();
 	} else if (autonSwitch == 2) {
-		farAuton(1);
+		farAuton(5);
 	}
 }
 
