@@ -37,7 +37,7 @@ void autonomous() {
 	} else if (autonSwitch == 1) {
 		closeAuton();
 	} else if (autonSwitch == 2) {
-		farAuton(5);
+		farAuton(3);
 	}
 }
 
@@ -61,7 +61,7 @@ void opcontrol() {
 		double rotation = rotationCoefficient * pow(master.get_analog(ANALOG_RIGHT_X), 3);
 
 		left_drive = (ymotion + rotation) * drivePower;
-		right_drive = 0.9*(ymotion - rotation) * drivePower;
+		right_drive = (ymotion - rotation) * drivePower;
 
 		//blocker.set_value(master.get_digital(DIGITAL_A));
 

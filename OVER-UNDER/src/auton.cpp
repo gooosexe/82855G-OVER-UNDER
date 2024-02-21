@@ -219,6 +219,21 @@ void skillsAuton(){
 }
 
 void closeAuton(){
+	mtr_intake = -100;
+	moveStraight(10,400);
+	pros::delay(400);
+	lwing.set_value(true);
+	pros::delay(200);
+	lwing.set_value(false);
+	moveStraight(24,600);
+	
+	turn(65,400);
+	moveStraight(28,600);
+
+
+
+
+
 	// wing triball out of matchload zone
 	// push both balls into goal
 	// come back and touch elevation bar with ass
@@ -226,6 +241,38 @@ void closeAuton(){
 
 void farAuton(int type) {
 	switch (type) {
+		case 3:
+			moveStraight(24,800);
+			mtr_intake = 70;
+			pros::delay(600);
+			mtr_intake = -127;
+
+			turn(-60,800);
+			moveStraight(24,800);
+
+			turn(105,800);
+			mtr_intake = 100;
+			pros::delay(400);
+			mtr_intake = -127;
+
+			turn(-65,800);
+			moveStraight(24,800);
+			turn(100,800);
+			
+
+
+			lwing.set_value(true);
+			rwing.set_value(true);
+			moveStraight(85,1000);
+			pros::delay(400);
+			moveStraight(-30,500);
+			pros::delay(400);
+			moveStraight(40,500);
+			pros::delay(400);
+			moveStraight(-20,800);
+
+
+			break;
 		case 4: 
 			mtr_intake = 127;
 			pros::delay(100);
@@ -257,7 +304,7 @@ void farAuton(int type) {
 
 			moveStraight(-23, 800); // back up
 			turn(90, 700); // turn towards goal
-			moveStraight(150, 700);
+			moveStraight(1, 700);
 			pros::delay(50);
 			turn(90, 600);
 			mtr_intake = 127; // unload
