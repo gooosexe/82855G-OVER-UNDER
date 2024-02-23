@@ -10,7 +10,7 @@ bool wingState = false;
 float drivePower = 0.9;
 const double rotationPower = 0.9;
 const double rotationCoefficient = (127*rotationPower)/pow(127, 3);
-int autonSwitch = 2;
+int autonSwitch = 0;
 
 
 // extern const lv_img_dsc_t funiiimage;
@@ -37,7 +37,7 @@ void autonomous() {
 	} else if (autonSwitch == 1) {
 		closeAuton();
 	} else if (autonSwitch == 2) {
-		farAuton(3);
+		farAuton(7);
 	}
 }
 
@@ -47,12 +47,13 @@ void autonomous() {
  */
 void opcontrol() {
 	// flywheel pid loop variables
-	double Kp = 3;
-	double Ki = 0;
-	double Kd = 0;
-	double target = 250;
+	double Kp = 5;
+	double Ki = 0.5;
+	double Kd = 2;
+	double target = 450;
 	double error, steadyStateError, prevError, errorRate, accel, curVel;
 	double time = 0;
+	mtr_flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_COAST); 
 	while (true) {
 		time++;
 		// DRIVETRAIN
@@ -76,7 +77,7 @@ void opcontrol() {
 		}
  
 		// flywheel pid loop
-		if (master.get_digital(DIGITAL_B)) {
+		/*if (master.get_digital(DIGITAL_B)) {
 			curVel = mtr_flywheel.get_actual_velocity();
 			error = target - curVel;
 			steadyStateError += error;
@@ -86,7 +87,10 @@ void opcontrol() {
 			printf("%f,%f,200,%f\n", curVel, accel, time/100);
 		} else {
 			mtr_flywheel.move_velocity(0);
-		}
+		}*/
+
+		if (master.get_digital(DIGITAL_B)) mtr_flywheel = 11;
+		else mtr_flywheel = 0;
 		// HANG
 		//hang.set_value(master.get_digital(DIGITAL_X));
 

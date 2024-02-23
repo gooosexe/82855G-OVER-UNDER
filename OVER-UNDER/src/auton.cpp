@@ -161,10 +161,10 @@ void turn(double degrees, double time) {
 }
 
 void flywheelPID(int time) {
+	double target = 400;
 	while (cycles < time/20) {
 		cycles++;
 		// flywheel pid loop
-		double target = 250;
 		double curVel = mtr_flywheel.get_actual_velocity();
 		error = target - curVel;
 		steadyStateError += error;
@@ -178,57 +178,82 @@ void flywheelPID(int time) {
 }
 
 void skillsAuton(){
-	mtr_intake = 127; // unload preload
-	pros::delay(500);
-	mtr_intake = -127;
-	moveStraight(-30, 800);
-	turn(-12, 1000);
+	//flywheelPID(30000);
+	mtr_flywheel = 127;
+	pros::delay(3000);
 
-	flywheelPID(30000);
+	// into side
+	turn(70, 1000);
+	moveStraight(50, 1000);
+	moveStraight(-10, 400); 
 
-	turn(-15, 800);
-	moveStraight(80, 3000);
-	turn(50, 800);
-	//smash
-	moveStraight(-20, 500);
-	moveStraight(50, 500);
-	moveStraight(-20, 500);
+	// through alley
+	turn(-145, 1200);
+	moveStraight(35, 1000);
+	turn(40, 1000);
+	moveStraight(70, 2000);
 
-	turn(90, 800);
+	// into side
+	turn(60, 800);
+	moveStraight(50, 1000);
+	moveStraight(-20, 1000);
+	moveStraight(50, 1000);
+	moveStraight(-15, 800);
+
+	// towards middle
+	turn(75, 1000);
 	moveStraight(50, 800);
-	turn(-90, 800);
+
+	// angling
+	turn(-135, 800);
 	lwing.set_value(true);
-	moveStraight(36, 800);
 	rwing.set_value(true);
-	turn(-90, 800);
+	moveStraight(6,9);
 
-	//smash
-	moveStraight(50, 800);
+	// smash
+	moveStraight(50, 1000);
+	moveStraight(-20, 1000);
+	moveStraight(50, 1000);
 	moveStraight(-20, 800);
-	moveStraight(50, 800);
 
-	moveStraight(-50, 800);
+	// move towards the side
 	rwing.set_value(false);
-	turn(90, 800);
-	moveStraight(40, 800);
-	rwing.set_value(true);
-	turn(-90, 800);
-	moveStraight(24,800);
-	turn(-50, 800);
+	turn(90, 1000);
+	moveStraight(50, 800);
+	turn(-90, 1000);
+	moveStraight(40,800);
+	turn(-90, 1000);
 	moveStraight(40, 800);
 }
 
 void closeAuton(){
 	mtr_intake = -100;
-	moveStraight(10,400);
+	moveStraight(24,800);
 	pros::delay(400);
-	lwing.set_value(true);
+	turn(35,400);
+	mtr_intake = 100;
+	pros::delay(600);
+	turn(180,1000);
+	pros::delay(600);
+	moveStraight(-24,800);
+
 	pros::delay(200);
-	lwing.set_value(false);
-	moveStraight(24,600);
+	moveStraight(19,800);
+	turn(-45,300);
+	moveStraight(10,800);
+	rwing.set_value(true);
+	pros::delay(500);
+	moveStraight(14, 200);
 	
-	turn(65,400);
-	moveStraight(28,600);
+	pros::delay(300);
+	moveStraight(25,200);
+	pros::delay(300);
+	rwing.set_value(false);
+	pros::delay(500);
+	turn(-55,600);
+	mtr_intake = 100;
+	moveStraight(34,1200);
+	
 
 
 
@@ -340,6 +365,9 @@ void farAuton(int type) {
 			// moveStraight(50, 500);
 			// moveStraight(-20, 500);
 			// moveStraight(50, 500);
+			break;
+		case 7:
+			turn(90, 1000);
 			break;
 	}
 }
